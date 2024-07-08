@@ -1,4 +1,4 @@
-1. Check if Django is installed. If not run
+1. Check if Django is installed. If not, run
 ```
 pip install Django
 ```
