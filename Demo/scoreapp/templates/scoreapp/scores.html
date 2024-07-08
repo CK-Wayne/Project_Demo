@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Score Query</title>
+    <script>
+        function toggleFields() {
+            var mode = document.getElementById("mode").value;
+            var usernameField = document.getElementById("usernameField");
+            var thresholdField = document.getElementById("thresholdField");
+            var kField = document.getElementById("kField");
+            if (mode == "specific_user") {
+                usernameField.style.display = "";
+                thresholdField.style.display = "";
+                kField.style.display = "none";
+            } else {
+                usernameField.style.display = "none";
+                thresholdField.style.display = "none";
+                kField.style.display = "";
+            }
+        }
+    </script>
+</head>
+<body onload="toggleFields()">
+    <h1>查詢模型結果</h1>
+    <form method="post" action="/score/">
+        {% csrf_token %}
+        <label for="mode">選擇模式:</label>
+        <select id="mode" name="mode" onchange="toggleFields()">
+            <option value="specific_user" {% if selected_mode == "specific_user" %}selected{% endif %}>查詢特定用戶</option>
+            <option value="top_k" {% if selected_mode == "top_k" %}selected{% endif %}>顯示 Top K 用戶和項目</option>
+        </select><br><br>
+        <div id="usernameField">
+            <label for="user_id">用戶ID:</label>
+            <input type="text" id="user_id" name="user_id" placeholder="max user id: {{ max_user_id }}"><br><br>
+        </div>
+        <div id="thresholdField">
+            <label for="threshold">閾值:</label>
+            <input type="text" id="threshold" name="threshold" value="0.1546"><br><br>
+        </div>
+        <div id="kField">
+            <label for="k">Top K:</label>
+            <input type="number" id="k" name="k" value="5"><br><br>
+        </div>
+        <input type="submit" value="查詢">
+    </form>
+    <!-- 查詢結果顯示區域 -->
+    <div id="results">
+        {% if results %}
+            <h2>特定用戶的結果</h2>
+            <table>
+                <tr>
+                    <th style="padding-right: 20px;">用戶ID</th>
+                    <th>模型判斷結果</th>
+                </tr>
+                {% for result in results %}
+                    <tr>
+                        <td style="padding-right: 20px; font-size: 24px; font-weight: bold;">{{ result.user_id }}</td>
+                        <td style="color: {% if result.result == 1 %}red{% else %}black{% endif %}; font-size: 24px; font-weight: bold;">{{ result.result }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            {% if top_k_users == None and top_k_items == None%}
+                <h2>請輸入範圍內的用戶ID以查詢結果</h2>
+            {% endif %}
+        {% endif %}
+        {% if top_k_users and top_k_items %}
+            <h2>Top {{ k }} 用戶</h2>
+            <table>
+                <tr>
+                    <th style="padding-right: 20px;">用戶ID</th>
+                    <th>異常分數</th>
+                </tr>
+                {% for user in top_k_users %}
+                    <tr>
+                        <td>{{ user.user_id }}</td>
+                        <td>{{ user.anomaly_score|floatformat:4 }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <h2>Top {{ k }} 項目</h2>
+            <table>
+                <tr>
+                    <th style="padding-right: 20px;">項目ID</th>
+                    <th>異常分數</th>
+                </tr>
+                {% for item in top_k_items %}
+                    <tr>
+                        <td>{{ item.item_id }}</td>
+                        <td>{{ item.anomaly_score|floatformat:4 }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>
