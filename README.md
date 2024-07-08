@@ -3,7 +3,9 @@
 pip install Django
 ```
 
-2. Make sure you're in Demo folder.
+2. Download the file and unzip it.
+
+3. Make sure you're in Demo folder.
 ```
 Demo <- you should be here
 |--Demo
@@ -12,12 +14,12 @@ Demo <- you should be here
 |--manage.py
 ```
 
-3. Run
+4. Run
 ```
 python manage.py runserver
 ```
 
-4. Paste the text below in your browser and done!  
+5. Paste the text below in your browser and done!  
    (Please be sure you add "/score" in your url.)  
    (If you changed your port, please replace :8000 with your own port.)
 ```
