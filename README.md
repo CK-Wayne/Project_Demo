@@ -19,7 +19,7 @@ Demo <- your console should be here!
 python manage.py runserver
 ```
 
-5. Paste the text below in your browser and done!  
+5. Paste the url below in your browser and done!  
    (Please be sure you add "/score" in your url.)  
    (If you changed your port, please replace :8000 with your own port.)
 ```
