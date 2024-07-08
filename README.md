@@ -7,7 +7,7 @@ pip install Django
 
 3. Make sure you're in Demo folder.
 ```
-Demo <- you should be here
+Demo <- your console should be here~
 |--Demo
 |--scoreapp
 |--db.sqlite3
